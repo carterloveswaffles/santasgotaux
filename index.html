@@ -247,5 +247,30 @@
     snow.appendChild(frag);
   })();
 </script>
+<script>
+  // Click + view counts (Abacus, no account). One counter per link per day,
+  // keyed by Pacific date, e.g. santasgotaux-com/merch_2026-10-07.
+  (function () {
+    const NS = "https://abacus.jasoncameron.dev/hit/santasgotaux-com/";
+    const day = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Los_Angeles" }).format(new Date());
+    const hit = (name) => {
+      try { fetch(NS + name + "_" + day, { mode: "cors", keepalive: true }); } catch (e) {}
+    };
+    const slug = (href) => {
+      if (href.includes("dashery.com")) return "merch";
+      if (href.includes("podiu.ms")) return "reviews";
+      if (href.includes("jollysantablueeyes")) return "jollysanta";
+      if (href.includes("tiktok.com")) return "tiktok";
+      if (href.includes("instagram.com/santasgotaux")) return "instagram";
+      if (href.includes("instagram.com")) return "instagram_santa";
+      return "other";
+    };
+    hit("view");
+    document.querySelectorAll("a.link").forEach((a) => {
+      a.addEventListener("click", () => hit(slug(a.href)));
+      a.addEventListener("auxclick", (e) => { if (e.button === 1) hit(slug(a.href)); });
+    });
+  })();
+</script>
 </body>
 </html>
